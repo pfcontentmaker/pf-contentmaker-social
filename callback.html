@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Autorização recebida — PF.Contentmaker Social</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { max-width: 40rem; margin: 0 auto; padding: 3rem 1.25rem 5rem;
+         font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  h1 { font-size: 1.4rem; margin-bottom: 1.5rem; }
+  #box { padding: 1rem; border: 1px solid rgba(128,128,128,.4); border-radius: 8px;
+         font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .9rem;
+         word-break: break-all; user-select: all; }
+  button { margin-top: .9rem; padding: .6rem 1.1rem; font-size: 1rem; border-radius: 8px;
+           border: 1px solid rgba(128,128,128,.5); background: transparent; color: inherit; cursor: pointer; }
+  .warn { margin-top: 2rem; padding: .9rem 1.1rem; border-left: 3px solid #d9534f;
+          font-size: .9rem; opacity: .9; }
+  .err { color: #d9534f; }
+</style>
+</head>
+<body>
+
+<h1>Autorização recebida</h1>
+
+<div id="box">lendo…</div>
+<button id="copy" hidden>Copiar código</button>
+
+<div class="warn">
+  Este código é de uso único e expira em poucos minutos. Cole-o direto no script de troca de token,
+  na sua máquina. <strong>Não cole em chat, e-mail ou documento.</strong>
+</div>
+
+<script>
+  var q = new URLSearchParams(location.search);
+  var box = document.getElementById('box');
+  var btn = document.getElementById('copy');
+  var code = q.get('code');
+  var err = q.get('error');
+
+  if (err) {
+    box.className = 'err';
+    box.textContent = 'Erro: ' + err + (q.get('error_description') ? ' — ' + q.get('error_description') : '');
+  } else if (code) {
+    box.textContent = code;
+    btn.hidden = false;
+    btn.onclick = function () {
+      navigator.clipboard.writeText(code).then(function () { btn.textContent = 'Copiado'; });
+    };
+    // limpa a query da barra de endereço para o código não ficar no histórico do navegador
+    history.replaceState(null, '', location.pathname);
+  } else {
+    box.textContent = 'Nenhum código na URL. Esta página só faz sentido como retorno do login do TikTok.';
+  }
+</script>
+
+</body>
+</html>
